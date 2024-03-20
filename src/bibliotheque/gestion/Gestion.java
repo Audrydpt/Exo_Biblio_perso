@@ -157,7 +157,12 @@ public class Gestion {
         Exemplaire ex = new Exemplaire(mat,etat,louv.get(choix-1));
         lex.add(ex);
         System.out.println("exemplaire créé");
+
         //TODO attribuer rayon
+
+
+
+
     }
 
     private void gestOuvrages() {

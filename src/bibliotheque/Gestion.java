@@ -106,93 +106,6 @@ public class Gestion {
         }  while (true);
     }
 
-    private void gestLocations() {
-    //TODO lister exemplaires,lister lecteurs,créer la location avec le constructeur à deux paramètres(loueur,exemplaire)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    }
-
     private void gestLecteurs() {
 
         sc.skip("\n");
@@ -218,13 +131,21 @@ public class Gestion {
     }
 
     private void gestRayons() {
-    //TODO gérer rayons
+        sc.skip("\n");
+        System.out.println("code ");
+        String code=sc.nextLine();
+        System.out.println("genre ");
+        String genre=sc.nextLine();
+        Rayon r = new Rayon(code,genre);
+        lrayon.add(r);
+        System.out.println("rayon créé");
 
     }
 
     private void gestExemplaires() {
         //TODO afficher les ouvrages et choisir par sa position dans la liste
         //TODO demander autres infos de l'exemplaire et le créer
+
 
     }
 
@@ -235,6 +156,13 @@ public class Gestion {
 
     private void gestAuteurs() {
         //TODO créer auteur
+
+    }
+
+    private void gestLocations() {
+        //TODO lister exemplaires,lister lecteurs,créer la location avec le constructeur à deux paramètres(loueur,exemplaire)
+
+
 
     }
 

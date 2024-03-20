@@ -107,7 +107,89 @@ public class Gestion {
     }
 
     private void gestLocations() {
-//TODO lister exemplaires,lister lecteurs,créer la location avec le constructeur à deux paramètres(loueur,exemplaire)
+    //TODO lister exemplaires,lister lecteurs,créer la location avec le constructeur à deux paramètres(loueur,exemplaire)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     }
 
@@ -136,7 +218,8 @@ public class Gestion {
     }
 
     private void gestRayons() {
- //TODO gérer rayons
+    //TODO gérer rayons
+
     }
 
     private void gestExemplaires() {

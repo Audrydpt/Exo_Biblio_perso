@@ -50,6 +50,8 @@ public class Auteur {
         this.louvrage = louvrage;
     }
 
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -72,19 +74,19 @@ public class Auteur {
                 '}';
     }
 
-    public void addOuvrage(Ouvrage o) {
+    public void addOuvrage(Ouvrage o ){
         louvrage.add(o);
         o.getLauteurs().add(this);
     }
 
-    public void remove(Ouvrage o) {
+    public void remove(Ouvrage o){
         louvrage.remove(o);
         o.getLauteurs().remove(this);
     }
 
-    public List<Ouvrage> listerOuvrages(){
+    public Set<Ouvrage> listerOuvrages(){
 
-        return (List<Ouvrage>) louvrage;
+        return louvrage;
     }
 
     public List<Ouvrage> listerOuvrages(TypeOuvrage to){

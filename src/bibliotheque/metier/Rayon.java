@@ -1,14 +1,14 @@
 package bibliotheque.metier;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
 public class Rayon {
     private String codeRayon;
     private String genre;
-    private Set<Exemplaire> lex;
+    private Set<Exemplaire> lex = new HashSet<>();
+
 
     public Rayon(String codeRayon, String genre) {
         this.codeRayon = codeRayon;
@@ -68,12 +68,8 @@ public class Rayon {
         this.lex = lex;
     }
 
-    public double amendeRetard(int njours){
-        return 0;
-    }
-
-    public int njlocmax(){
-        return 0;
+    public Set<Exemplaire>listerExemplaires(){
+        return lex;
     }
 
 

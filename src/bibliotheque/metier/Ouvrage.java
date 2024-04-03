@@ -15,8 +15,10 @@ public abstract class Ouvrage {
     protected String langue;
     protected String genre;
 
-    private Set<Auteur> lauteurs = new HashSet<>();
-    private Set<Exemplaire> lex = new HashSet<>();
+    protected Set<Auteur> lauteurs=new HashSet<>();
+
+    protected Set<Exemplaire> lex = new HashSet<>();
+
 
     public Ouvrage(String titre, int ageMin, LocalDate dateParution, TypeOuvrage to, double prixLocation, String langue, String genre) {
         this.titre = titre;
@@ -88,7 +90,6 @@ public abstract class Ouvrage {
         return lauteurs;
     }
 
-
     public void setLauteurs(Set<Auteur> lauteurs) {
         this.lauteurs = lauteurs;
     }
@@ -118,12 +119,12 @@ public abstract class Ouvrage {
                 ", genre='" + genre + '\'' +
                 '}';
     }
-    public void addAuteur(Auteur a) {
+    public void addAuteur(Auteur a ){
         lauteurs.add(a);
         a.getLouvrage().add(this);
     }
 
-    public void removeAuteur(Auteur a) {
+    public void remove(Auteur a){
         lauteurs.remove(a);
         a.getLouvrage().remove(this);
     }
@@ -136,8 +137,9 @@ public abstract class Ouvrage {
         lex.remove(e);
         e.setOuvrage(null);
     }
-
-
+    public Set<Exemplaire>listerExemplaires(){
+        return lex;
+    }
 
     public List<Exemplaire>listerExemplaires(boolean enLocation){
         List<Exemplaire> lex2 = new ArrayList<>();

@@ -1,5 +1,7 @@
 package bibliotheque.metier;
 
+import bibliotheque.gestion.Gestion;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -141,10 +143,12 @@ public abstract class Ouvrage {
         return lex;
     }
 
-    public List<Exemplaire>listerExemplaires(boolean enLocation){
+    public List<Exemplaire> listerExemplaires(boolean enLocation) {
         List<Exemplaire> lex2 = new ArrayList<>();
-        for(Exemplaire ex : lex){
-            if(ex.enLocation()==enLocation) lex2.add(ex);
+        for (Exemplaire ex : lex) {
+            if (Gestion.Locations.containsKey(ex) == enLocation) {
+                lex2.add(ex);
+            }
         }
         return lex2;
     }

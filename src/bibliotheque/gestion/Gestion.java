@@ -20,7 +20,8 @@ public class Gestion {
     private List<Ouvrage> louv= new ArrayList<>();
     private List<Exemplaire> lex = new ArrayList<>();
     private List<Rayon> lrayon= new ArrayList<>();
-    private List<Location> lloc = new ArrayList<>();
+    public static final Map<Exemplaire, Lecteur> Locations = new HashMap<>();
+
 
 
     public void populate(){
@@ -72,15 +73,11 @@ public class Gestion {
         Lecteur lec = new Lecteur(1,"Dupont","Jean",LocalDate.of(2000,1,4),"Mons","jean.dupont@mail.com","0458774411");
         llect.add(lec);
 
-        Location loc = new Location(LocalDate.of(2023,2,1),LocalDate.of(2023,3,1),lec,e);
-        lloc.add(loc);
-        loc.setDateRestitution(LocalDate.of(2023,2,4));
 
         lec = new Lecteur(1,"Durant","Aline",LocalDate.of(1980,10,10),"Binche","aline.durant@mail.com","045874444");
         llect.add(lec);
 
-        loc = new Location(LocalDate.of(2023,2,5),LocalDate.of(2023,3,5),lec,e);
-        lloc.add(loc);
+
     }
 
     private void menu() {
@@ -94,7 +91,7 @@ public class Gestion {
                 case 3 : gestExemplaires();break;
                 case 4 : gestRayons();break;
                 case 5 : gestLecteurs();break;
-                case 6 : gestLocations();break;
+                case 6 :
                 case 7 : gestRestitution();break;
                 default:System.exit(0);
             }
@@ -102,25 +99,45 @@ public class Gestion {
     }
 
     private void gestRestitution() {
-        //TODO lister exemplaires en location , choisir l'un d'entre eux, enregistrer sa restitution et éventuellement changer état
+        // Vérifier si la HashMap Locations est vide
+        if (Locations.isEmpty()) {
+            System.out.println("Il n'y a actuellement aucun exemplaire en location.");
+            return;
+        }
+
+        // Afficher tous les exemplaires en location
+        System.out.println("Exemplaires actuellement en location :");
+        int i = 1;
+        for (Exemplaire exemplaire : Locations.keySet()) {
+            System.out.println(i + ". " + exemplaire);
+            i++;
+        }
+
+        // Demander à l'utilisateur de choisir un exemplaire pour la restitution
+        System.out.println("Veuillez choisir un exemplaire pour la restitution (entrez le numéro) :");
+        int choix = sc.nextInt();
+        sc.nextLine();  // consommer le saut de ligne restant
+
+        // Obtenir l'exemplaire choisi et le lecteur correspondant
+        Exemplaire exemplaireChoisi = new ArrayList<>(Locations.keySet()).get(choix - 1);
+        Lecteur lecteur = Locations.get(exemplaireChoisi);
+
+        // Enregistrer la date de restitution
+        Locations.remove(exemplaireChoisi);
+        System.out.println("La date de restitution de l'exemplaire choisi a été enregistrée comme étant aujourd'hui.");
+
+        // Demander à l'utilisateur s'il souhaite changer l'état de l'exemplaire
+        System.out.println("Voulez-vous changer l'état de l'exemplaire ? (oui/non) :");
+        String reponse = sc.nextLine();
+        if (reponse.equalsIgnoreCase("oui")) {
+            System.out.println("Veuillez entrer le nouvel état de l'exemplaire :");
+            String nouvelEtat = sc.nextLine();
+            exemplaireChoisi.setEtat(nouvelEtat);
+            System.out.println("L'état de l'exemplaire a été mis à jour.");
+        }
     }
 
-    private void gestLocations() {
-        int choix;
-        List<Exemplaire> lex2 = new ArrayList<>(lex);
-        Iterator<Exemplaire> itlex2 = lex2.iterator();
-        while(itlex2.hasNext()){
-            if(itlex2.next().enLocation()) itlex2.remove();
-        }
-        lex2.sort(new ExemplaireMatriculeComparator());
-        choix =choixListe(lex2);
-        if(choix==0)return;
-        Exemplaire ex = lex2.get(choix-1);
-        choix=choixListe(llect);
-        if(choix==0)return;
-        Lecteur lec = llect.get(choix-1);
-        lloc.add(new Location(lec,ex));
-    }
+
 
     private void gestLecteurs() {
         System.out.println("numéro");
@@ -243,13 +260,13 @@ public class Gestion {
                             do{
                                 choix=Utilitaire.choixListe(langues);
                                 if(choix==langues.size())break;
-                                ((DVD)o).getAutresLangues().add(langues.get(choix-1));//TODO vérifier unicité ou utiliser set et pas de doublon avec langue d'origine
+                                ((DVD)o).getAutresLangues().add(langues.get(choix-1));
                             }while(true);
                            System.out.println("sous-titres");
                             do{
                              choix=Utilitaire.choixListe(langues);
                              if(choix==langues.size())break;
-                             ((DVD)o).getSousTitres().add(langues.get(choix-1));//TODO vérifier unicité ou utiliser set
+                             ((DVD)o).getSousTitres().add(langues.get(choix-1));
                              }while(true);
                             ;break;
             }*/
@@ -312,6 +329,27 @@ public class Gestion {
             lo2.remove(choix - 1);
         }
         while(true);
+    }
+
+    public Lecteur lecteurActuel(Exemplaire exemplaire) {
+        // Return the Lecteur who has currently rented the given Exemplaire
+        if (Locations.containsKey(exemplaire)) {
+            return Locations.get(exemplaire);
+        } else {
+            System.out.println("Cet exemplaire n'est pas actuellement en location.");
+            return null;
+        }
+    }
+
+    public boolean enLocation(Exemplaire exemplaire) {
+        // Check if the given Exemplaire is currently in location
+        if (Locations.containsKey(exemplaire)) {
+            System.out.println("Cet exemplaire est actuellement en location.");
+            return true;
+        } else {
+            System.out.println("Cet exemplaire n'est pas actuellement en location.");
+            return false;
+        }
     }
 
     public static void main(String[] args) {

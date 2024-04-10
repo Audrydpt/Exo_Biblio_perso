@@ -1,9 +1,10 @@
 package bibliotheque.gestion;
 
 import bibliotheque.metier.*;
-import bibliotheque.utilitaires.CDFactoryBeta;
-import bibliotheque.utilitaires.DVDFactoryBeta;
-import bibliotheque.utilitaires.LivreFactoryBeta;
+import bibliotheque.utilitaires.CDFactory;
+import bibliotheque.utilitaires.DVDFactory;
+import bibliotheque.utilitaires.LivreFactory;
+import bibliotheque.utilitaires.OuvrageFactory;
 import bibliotheque.utilitaires.comparators.*;
 
 import java.time.LocalDate;
@@ -12,7 +13,7 @@ import java.util.*;
 
 import static bibliotheque.utilitaires.Utilitaire.choixListe;
 
-public class Gestion {
+public class GestionOld {
     Scanner sc = new Scanner(System.in);
 //on a ôté static pour les listes qui n'est plus nécessaire
     private List<Auteur> laut = new ArrayList<>();
@@ -20,8 +21,8 @@ public class Gestion {
     private List<Ouvrage> louv= new ArrayList<>();
     private List<Exemplaire> lex = new ArrayList<>();
     private List<Rayon> lrayon= new ArrayList<>();
-    public static final Map<Exemplaire, Lecteur> Locations = new HashMap<>();
 
+    public static final Map<Exemplaire,Lecteur> LOCATIONS = new HashMap();
 
 
     public void populate(){
@@ -73,11 +74,10 @@ public class Gestion {
         Lecteur lec = new Lecteur(1,"Dupont","Jean",LocalDate.of(2000,1,4),"Mons","jean.dupont@mail.com","0458774411");
         llect.add(lec);
 
+        LOCATIONS.put(e,lec);
 
         lec = new Lecteur(1,"Durant","Aline",LocalDate.of(1980,10,10),"Binche","aline.durant@mail.com","045874444");
         llect.add(lec);
-
-
     }
 
     private void menu() {
@@ -91,7 +91,7 @@ public class Gestion {
                 case 3 : gestExemplaires();break;
                 case 4 : gestRayons();break;
                 case 5 : gestLecteurs();break;
-                case 6 :
+                case 6 : gestLocations();break;
                 case 7 : gestRestitution();break;
                 default:System.exit(0);
             }
@@ -99,45 +99,25 @@ public class Gestion {
     }
 
     private void gestRestitution() {
-        // Vérifier si la HashMap Locations est vide
-        if (Locations.isEmpty()) {
-            System.out.println("Il n'y a actuellement aucun exemplaire en location.");
-            return;
-        }
-
-        // Afficher tous les exemplaires en location
-        System.out.println("Exemplaires actuellement en location :");
-        int i = 1;
-        for (Exemplaire exemplaire : Locations.keySet()) {
-            System.out.println(i + ". " + exemplaire);
-            i++;
-        }
-
-        // Demander à l'utilisateur de choisir un exemplaire pour la restitution
-        System.out.println("Veuillez choisir un exemplaire pour la restitution (entrez le numéro) :");
-        int choix = sc.nextInt();
-        sc.nextLine();  // consommer le saut de ligne restant
-
-        // Obtenir l'exemplaire choisi et le lecteur correspondant
-        Exemplaire exemplaireChoisi = new ArrayList<>(Locations.keySet()).get(choix - 1);
-        Lecteur lecteur = Locations.get(exemplaireChoisi);
-
-        // Enregistrer la date de restitution
-        Locations.remove(exemplaireChoisi);
-        System.out.println("La date de restitution de l'exemplaire choisi a été enregistrée comme étant aujourd'hui.");
-
-        // Demander à l'utilisateur s'il souhaite changer l'état de l'exemplaire
-        System.out.println("Voulez-vous changer l'état de l'exemplaire ? (oui/non) :");
-        String reponse = sc.nextLine();
-        if (reponse.equalsIgnoreCase("oui")) {
-            System.out.println("Veuillez entrer le nouvel état de l'exemplaire :");
-            String nouvelEtat = sc.nextLine();
-            exemplaireChoisi.setEtat(nouvelEtat);
-            System.out.println("L'état de l'exemplaire a été mis à jour.");
-        }
+        //TODO lister exemplaires en location , choisir l'un d'entre eux, enregistrer sa restitution et éventuellement changer état
     }
 
-
+    private void gestLocations() {
+        int choix;
+        List<Exemplaire> lex2 = new ArrayList<>(lex);
+        Iterator<Exemplaire> itlex2 = lex2.iterator();
+        while(itlex2.hasNext()){
+            if(itlex2.next().enLocation()) itlex2.remove();
+        }
+        lex2.sort(new ExemplaireMatriculeComparator());
+        choix =choixListe(lex2);
+        if(choix==0)return;
+        Exemplaire ex = lex2.get(choix-1);
+        choix=choixListe(llect);
+        if(choix==0)return;
+        Lecteur lec = llect.get(choix-1);
+        LOCATIONS.put(ex,lec);
+    }
 
     private void gestLecteurs() {
         System.out.println("numéro");
@@ -207,70 +187,6 @@ public class Gestion {
            }
 
     private void gestOuvrages() {
-      /*  Ouvrage o = null;
-        System.out.println("titre");
-        String titre= sc.nextLine();
-        System.out.println("age minimum");
-        int ageMin= sc.nextInt();
-        sc.skip("\n");
-        System.out.println("date de parution");
-
-        LocalDate dp= Utilitaire.lecDate();
-        System.out.println("prix de location");
-        double ploc = sc.nextDouble();
-        sc.skip("\n");
-        System.out.println("langue");
-        String langue=sc.nextLine();
-        System.out.println("genre");
-        String genre=sc.nextLine();
-        TypeOuvrage[] tto = TypeOuvrage.values();
-        List<TypeOuvrage> lto = new ArrayList<>(Arrays.asList(tto));
-        int choix = Utilitaire.choixListe(lto);
-        switch (choix){
-                case 1 :
-                           System.out.println("isbn ");
-                           String isbn = sc.next();
-                           System.out.println("pages ");
-                           int nbrePages = sc.nextInt();
-                           sc.skip("\n");
-                           TypeLivre[] ttl = TypeLivre.values();
-                           List<TypeLivre> ltl = new ArrayList<>(Arrays.asList(ttl));
-                            choix = Utilitaire.choixListe(ltl);
-                            TypeLivre tl = ttl[choix-1];
-                           System.out.println("résumé du livre :");
-                           String resume = sc.nextLine();
-                           o=new Livre(titre,ageMin,dp,ploc,langue,genre,isbn,nbrePages,tl,resume);
-                           ;break;
-                case 2 :
-                            System.out.println("code : ");
-                            long code= sc.nextLong();
-                            System.out.println("nombre de plages :");
-                            byte nbrePlages= sc.nextByte();
-                            LocalTime dureeTotale = Utilitaire.lecTime();
-                            o=new CD(titre,ageMin,dp,ploc,langue,genre,code,nbrePlages,dureeTotale);
-                            ;break;
-                case 3 :
-                            System.out.println("code : ");
-                            code= sc.nextLong();
-                            dureeTotale=Utilitaire.lecTime();
-                            byte nbreBonus= sc.nextByte();
-                            o=new DVD(titre,ageMin,dp,ploc,langue,genre,code,dureeTotale,nbreBonus);
-                            System.out.println("autres langues");
-                            List<String> langues = new ArrayList<>(Arrays.asList("anglais","français","italien","allemand","fin"));
-                            do{
-                                choix=Utilitaire.choixListe(langues);
-                                if(choix==langues.size())break;
-                                ((DVD)o).getAutresLangues().add(langues.get(choix-1));
-                            }while(true);
-                           System.out.println("sous-titres");
-                            do{
-                             choix=Utilitaire.choixListe(langues);
-                             if(choix==langues.size())break;
-                             ((DVD)o).getSousTitres().add(langues.get(choix-1));
-                             }while(true);
-                            ;break;
-            }*/
-
 
 
         TypeOuvrage[] tto = TypeOuvrage.values();
@@ -279,13 +195,14 @@ public class Gestion {
         if(choix==0) return;
         Ouvrage o = null;
 
-     switch(choix) {
+    /* switch(choix) {
             case 1 : o = new LivreFactoryBeta().create();break;
             case 2 : o = new CDFactoryBeta().create();break;
             case 3 : o = new DVDFactoryBeta().create();break;
-        }
-       /* List<OuvrageFactory> lof = new ArrayList<>(Arrays.asList(new LivreFactory(),new CDFactory(),new DVDFactory()));
-        o = lof.get(choix-1).create();*/
+        }*/
+        List<OuvrageFactory> lof = Arrays.asList(new LivreFactory(),new CDFactory(),new DVDFactory());
+        OuvrageFactory of = lof.get(choix-1);
+        o = of.create();
         louv.add(o);
         System.out.println("ouvrage créé");
         List<Auteur> laut2 = new ArrayList<>(laut);
@@ -331,29 +248,8 @@ public class Gestion {
         while(true);
     }
 
-    public Lecteur lecteurActuel(Exemplaire exemplaire) {
-        // Return the Lecteur who has currently rented the given Exemplaire
-        if (Locations.containsKey(exemplaire)) {
-            return Locations.get(exemplaire);
-        } else {
-            System.out.println("Cet exemplaire n'est pas actuellement en location.");
-            return null;
-        }
-    }
-
-    public boolean enLocation(Exemplaire exemplaire) {
-        // Check if the given Exemplaire is currently in location
-        if (Locations.containsKey(exemplaire)) {
-            System.out.println("Cet exemplaire est actuellement en location.");
-            return true;
-        } else {
-            System.out.println("Cet exemplaire n'est pas actuellement en location.");
-            return false;
-        }
-    }
-
     public static void main(String[] args) {
-        Gestion g = new Gestion();
+        GestionOld g = new GestionOld();
         g.populate();
         g.menu();
     }

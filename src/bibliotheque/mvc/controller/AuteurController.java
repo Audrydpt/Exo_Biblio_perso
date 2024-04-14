@@ -55,4 +55,8 @@ public class AuteurController {
     public List<Ouvrage> listerOuvrages(Auteur a, String genre) {
        return model.listerOuvrages(a,genre);
     }
+
+    public void affList(List<Auteur> la) {
+        view.affList(la);
+    }
 }

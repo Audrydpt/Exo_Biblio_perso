@@ -110,4 +110,9 @@ public class ExemplaireViewConsole extends AbstractViewExemplaire {
         ExemplaireViewConsole evc = new ExemplaireViewConsole();
         evc.menu();
     }
+
+    @Override
+    public void affExemplaire(Exemplaire e) {
+        System.out.println(e);
+    }
 }

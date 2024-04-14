@@ -25,6 +25,8 @@
             av = new AuteurViewConsole();
             ac = new AuteurController(am,av);//création et injection de dépendance
             am.addObserver(av);
+            av.setController(ac);
+
 
     try {
         populate();
@@ -52,6 +54,8 @@
             a = new Auteur("Kubrick", "Stanley", "GB");
             am.getAll().add(a);
         }
+
+
 
         public static void main(String[] args) {
             GestionMVC gb = new GestionMVC();

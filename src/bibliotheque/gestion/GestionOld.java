@@ -99,7 +99,40 @@ public class GestionOld {
     }
 
     private void gestRestitution() {
-        //TODO lister exemplaires en location , choisir l'un d'entre eux, enregistrer sa restitution et éventuellement changer état
+        // List all exemplaires in location
+        List<Exemplaire> exemplairesInLocation = new ArrayList<>();
+        for (Map.Entry<Exemplaire, Lecteur> entry : LOCATIONS.entrySet()) {
+            exemplairesInLocation.add(entry.getKey());
+        }
+
+        // If there are no exemplaires in location, return
+        if (exemplairesInLocation.isEmpty()) {
+            System.out.println("No exemplaires in location.");
+            return;
+        }
+
+        // Let the user choose an exemplaire
+        System.out.println("Choose an exemplaire from the list:");
+        for (int i = 0; i < exemplairesInLocation.size(); i++) {
+            System.out.println((i + 1) + ". " + exemplairesInLocation.get(i).getMatricule());
+        }
+
+        int choix = sc.nextInt() - 1;
+        Exemplaire chosenExemplaire = exemplairesInLocation.get(choix);
+
+        // Record the restitution
+        LOCATIONS.remove(chosenExemplaire);
+        System.out.println("Restitution recorded for exemplaire: " + chosenExemplaire.getMatricule());
+
+        // Ask the user if they want to change the state of the exemplaire
+        System.out.println("Do you want to change the state of the exemplaire? (yes/no)");
+        String response = sc.next();
+        if (response.equalsIgnoreCase("yes")) {
+            System.out.println("Enter the new state:");
+            String newState = sc.next();
+            chosenExemplaire.setEtat(newState);
+            System.out.println("State of exemplaire changed to: " + newState);
+        }
     }
 
     private void gestLocations() {

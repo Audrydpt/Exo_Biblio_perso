@@ -164,6 +164,7 @@ public class ExemplaireViewConsole extends AbstractView<Exemplaire> {
     }
 
 
+
     public void enLocation(Exemplaire ex) {
         boolean loc = ((ControllerSpecialExemplaire)controller).enLocation(ex);
         if(loc) System.out.println("en location");
